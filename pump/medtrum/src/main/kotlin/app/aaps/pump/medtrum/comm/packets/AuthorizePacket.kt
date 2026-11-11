@@ -1,15 +1,15 @@
 package app.aaps.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.di.MetroMemberInjector
 import app.aaps.core.interfaces.logging.LTag
-import dagger.android.HasAndroidInjector
 import app.aaps.pump.medtrum.MedtrumPump
 import app.aaps.pump.medtrum.comm.enums.CommandType.AUTH_REQ
 import app.aaps.pump.medtrum.encryption.Crypt
 import app.aaps.pump.medtrum.extension.toByteArray
 import app.aaps.pump.medtrum.extension.toInt
-import javax.inject.Inject
+import dev.zacsweers.metro.Inject
 
-class AuthorizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+class AuthorizePacket(injector: MetroMemberInjector) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
 
@@ -33,7 +33,6 @@ class AuthorizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
     override fun getRequest(): ByteArray {
         val role = 2 // Fixed to 2 for pump
         val key = Crypt().keyGen(medtrumPump.pumpSN)
-        aapsLogger.debug(LTag.PUMPCOMM, "LJW Generate auth token: sn: ${medtrumPump.pumpSN}, snBytes: " + medtrumPump.pumpSN.toByteArray(4).contentToString().format("%02X") + ", key: ${key}, keyBytes: " + key.toByteArray(4).contentToString().format("%02X"))
         return byteArrayOf(opCode) + byteArrayOf(role.toByte()) + medtrumPump.patchSessionToken.toByteArray(4) + key.toByteArray(4)
     }
 
