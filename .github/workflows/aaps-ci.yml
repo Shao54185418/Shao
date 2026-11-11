@@ -2,6 +2,7 @@ name: AAPS CI
 
 on:
   workflow_dispatch:
+   
     inputs:
       tagName:
         description: 'Select AAPS Version'
